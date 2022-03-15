@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Random;
+
 /**
  * @Classname OrderController
  * @Description TODO
@@ -37,7 +40,14 @@ public class OrderController {
     @GetMapping("/order/prod/{pid}")
     public Order order(@PathVariable("pid") Integer pid) {
 
-        ServiceInstance productServiceInstance = discoveryClient.getInstances("service-product").get(0);
+//        ServiceInstance productServiceInstance = discoveryClient.getInstances("service-product").get(0);
+//        String productUrl = productServiceInstance.getHost() + ":" + productServiceInstance.getPort();
+//        Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
+
+        //可以启动多个product服务，自定义规则实现挑选服务
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
+        int index = new Random().nextInt(instances.size());
+        ServiceInstance productServiceInstance = instances.get(index);
         String productUrl = productServiceInstance.getHost() + ":" + productServiceInstance.getPort();
         Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
 
