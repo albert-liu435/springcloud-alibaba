@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!--<configuration scan="true" scanPeriod="1 seconds">-->
+
+<configuration>
+    <!-- 输出logback的本身状态数据 -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+    <!--日志文件名前缀，即应用名称 -->
+    <!--    <property name="logfile.prefix" value="logback-demo"/>-->
+    <!--日志路径，可写相对路径，也可写绝对路径 -->
+    <!--   <property name="log.path" value="logs"/>-->
+    <!-- 日志输出格式 -->
+    <property name="log.pattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5level [%10thread] [%X{request-id}] %40.40logger{40} [%10method,%line] : %msg%n"/>
+
+    <!-- 控制台输出日志 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${log.pattern}</pattern>
+        </layout>
+    </appender>
+
+
+
+
+    <logger name="com.herokuCenter.mapper" level="DEBUG"/>
+ <!--   <logger name="com.bestseller.miniapp" level="DEBUG"/>
+    <logger name="com.baomidou.mybatisplus" level="DEBUG"/>-->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+
+</configuration>

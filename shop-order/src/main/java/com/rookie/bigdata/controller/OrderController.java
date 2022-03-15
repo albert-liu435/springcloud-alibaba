@@ -4,6 +4,8 @@ import com.rookie.bigdata.domain.Order;
 import com.rookie.bigdata.domain.Product;
 import com.rookie.bigdata.domain.User;
 import com.rookie.bigdata.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -25,6 +27,9 @@ import java.util.Random;
 
 @RestController
 public class OrderController {
+
+
+   private static final Logger logger= LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -49,6 +54,8 @@ public class OrderController {
         int index = new Random().nextInt(instances.size());
         ServiceInstance productServiceInstance = instances.get(index);
         String productUrl = productServiceInstance.getHost() + ":" + productServiceInstance.getPort();
+        logger.info("请求url为{}",productUrl);
+
         Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
 
 
