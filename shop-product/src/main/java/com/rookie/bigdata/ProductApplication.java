@@ -2,6 +2,7 @@ package com.rookie.bigdata;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Version 1.0
  */
 /*@EnableEurekaClient*/
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ProductApplication {
 

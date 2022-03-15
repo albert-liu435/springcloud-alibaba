@@ -5,6 +5,8 @@ import com.rookie.bigdata.domain.Product;
 import com.rookie.bigdata.domain.User;
 import com.rookie.bigdata.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,14 +29,27 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
 
     //准备买一件商品
     @GetMapping("/order/prod/{pid}")
     public Order order(@PathVariable("pid") Integer pid) {
 
-        Product product = restTemplate.getForObject("http://localhost:8081/product/" + pid, Product.class);
+        ServiceInstance productServiceInstance = discoveryClient.getInstances("service-product").get(0);
+        String productUrl = productServiceInstance.getHost() + ":" + productServiceInstance.getPort();
+        Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
 
-        User user = restTemplate.getForObject("http://localhost:8071/user/" + pid, User.class);
+
+        ServiceInstance userServiceInstance = discoveryClient.getInstances("service-user").get(0);
+        String userUrl = userServiceInstance.getHost() + ":" + userServiceInstance.getPort();
+        User user = restTemplate.getForObject("http://" + userUrl + "/user/" + pid, User.class);
+
+
+        //Product product = restTemplate.getForObject("http://localhost:8081/product/" + pid, Product.class);
+
+        // User user = restTemplate.getForObject("http://localhost:8071/user/" + pid, User.class);
 
         Order order = new Order();
         order.setNumber(1);
@@ -48,7 +63,7 @@ public class OrderController {
 
         orderService.save(order);
 
-       // System.out.println(product);
+        // System.out.println(product);
 
         return order;
 
