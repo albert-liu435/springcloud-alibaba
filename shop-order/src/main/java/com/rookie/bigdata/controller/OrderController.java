@@ -4,6 +4,7 @@ import com.rookie.bigdata.domain.Order;
 import com.rookie.bigdata.domain.Product;
 import com.rookie.bigdata.domain.User;
 import com.rookie.bigdata.service.OrderService;
+import com.rookie.bigdata.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class OrderController {
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    @Autowired
+    private ProductService productService;
+
 
     //准备买一件商品
     @GetMapping("/order/prod/{pid}")
@@ -57,11 +61,12 @@ public class OrderController {
 //        logger.info("请求url为{}",productUrl);
 
 
-        String productUrl="service-product";
+//        String productUrl="service-product";
+//
+//
+//        Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
 
-
-        Product product = restTemplate.getForObject("http://" + productUrl + "/product/" + pid, Product.class);
-
+        Product product = productService.findByPid(pid);
 
         ServiceInstance userServiceInstance = discoveryClient.getInstances("service-user").get(0);
         String userUrl = userServiceInstance.getHost() + ":" + userServiceInstance.getPort();
