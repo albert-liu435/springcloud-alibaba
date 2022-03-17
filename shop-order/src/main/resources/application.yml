@@ -1,5 +1,7 @@
 server:
   port: 8091
+  tomcat:
+    max-threads: 10
 spring:
   application:
     name: service-order
@@ -20,9 +22,16 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        port: 9999 #跟控制台交流的端口，随意指定一个未使用的端口即可
+        dashboard: 192.168.125.110:8080 #指定控制台服务的地址
+        clientIp: 192.168.125.110
+
 
 ribbon:
   NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
 
 
 ##开启Ribbon的饥饿加载模式
